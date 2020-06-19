@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include"LexFileLoader.h"
 #include"Automaton.h"
 #include"GrammarFileReader.h"
@@ -7,6 +8,7 @@
 #include "LexMatcher.h"
 #include "SematicLoader.h"
 #include "SematicProcesser.h"
+#include "intermediate.h"
 using namespace std;
 // get an automaton
 hscp::Automaton getAutos() {
@@ -33,6 +35,7 @@ hscp::Automaton getAutos() {
 
 	return std::move(at);
 }
+
 int main(int argc, char** argv) {
 	string file = "Data\\source.txt";
 	//if (argc == 2)
@@ -60,5 +63,11 @@ int main(int argc, char** argv) {
 	auto ast = hscp::SematicProcesser::AnalyzeToAST(sematic, atree);
 	atree.Destroy();
 	hscp::PrintAST(ast);
+	freopen("Data\\data_target_code.txt", "w", stdout);
+	genIR::genIR(ast);
+	printf("$\n");
+	freopen("con", "w", stdout);
+	printf("1.接下来请运行target_code.exe\n");
+	system("pause");
 	return 0;
 }
