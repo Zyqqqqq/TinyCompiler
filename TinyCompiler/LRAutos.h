@@ -10,7 +10,7 @@
 
 #include"GrammarFileReader.h"
 #include"LL1Preprocess.h"
-#include"C:\Users\Miracle\Source\Repos\CompilePrinciple\Automaton\Vlpp.h" // include files over projects
+#include"Vlpp.h" // include files over projects
 
 namespace hscp {
 	struct LRState;

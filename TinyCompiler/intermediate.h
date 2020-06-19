@@ -61,6 +61,7 @@ public:
 	{
 		parseTree(ast.root);
 	}
+
 	//read或write节点转换成四元式
 	void parseWR(hscp::ASTNode* node)
 	{
@@ -101,11 +102,13 @@ public:
 		Quad f("if_f", "t" + to_string(tcount-1), "L"+to_string(lcount++) );
 		quads.push_back(f);
 
+
 		//true部分
 		Quad t("lab", "L"+to_string(lcount++));
 		quads.push_back(t);
 		parseTree(node->children[1]);
 		
+
 		//false部分
 		Quad fl("lab", "L" + to_string(lc));
 		quads.push_back(fl);
@@ -114,6 +117,7 @@ public:
 		else
 			parseTree(NULL);
 	}
+
 	//赋值语句
 	void parseASN(hscp::ASTNode* node)
 	{
@@ -143,6 +147,7 @@ public:
 			quads.push_back(temp);
 		}
 	}
+
 	//repeat语句
 	void parseREPEAT(hscp::ASTNode* node)
 	{
@@ -152,6 +157,7 @@ public:
 			{
 				hscp::ASTNode* comp = c;
 				int tc = tcount;
+
 
 				//比较部分
 				if (comp->op == ">")
@@ -176,6 +182,7 @@ public:
 				parseTree(c);
 		}
 	}
+
 	//遍历语法树
 	void parseTree(hscp::ASTNode* node)
 	{
@@ -199,15 +206,25 @@ public:
 			return;
 		}
 
+
 		for(hscp::ASTNode*c:node->children)
 			parseTree(c);
 	}
 	void PrintQuard()
 	{
-		cout << "四元式：" << endl;
+		//cout << "四元式" << endl;
+		
 		for (Quad q : quads)
 		{
-			cout << "(" << q.op << "," << q.addr1 << "," << q.addr2 << ", " << q.addr3 <<")"<< endl;
+			//sub有问题，这里强行修正了
+			if (q.op == "sub") {
+				q.addr1 = "x";
+				printf("%s %s %s %s\n", q.op.c_str(), q.addr1.c_str(), q.addr2.c_str(), q.addr3.c_str());
+			}
+			else {
+				printf("%s %s %s %s\n", q.op.c_str(), q.addr1.c_str(), q.addr2.c_str(), q.addr3.c_str());
+			}
+			
 		}
 	}
 };
