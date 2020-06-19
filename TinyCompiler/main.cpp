@@ -7,6 +7,7 @@
 #include "LexMatcher.h"
 #include "SematicLoader.h"
 #include "SematicProcesser.h"
+#include "intermediate.h"
 using namespace std;
 // get an automaton
 hscp::Automaton getAutos() {
@@ -60,5 +61,6 @@ int main(int argc, char** argv) {
 	auto ast = hscp::SematicProcesser::AnalyzeToAST(sematic, atree, symbol_table);
 	atree.Destroy();
 	hscp::PrintAST(ast);
+	genIR medCode (ast);//生成中间代码
 	return 0;
 }
