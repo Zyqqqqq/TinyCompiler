@@ -58,16 +58,16 @@ int main(int argc, char** argv) {
 	ana.PrintErrors();
 
 	auto& atree = ana.GetAnalyzeTree();
-
+	std::set<std::string> symbol_table;
 	hscp::SematicLoader sematic;
-	auto ast = hscp::SematicProcesser::AnalyzeToAST(sematic, atree);
+	auto ast = hscp::SematicProcesser::AnalyzeToAST(sematic, atree, symbol_table);
 	atree.Destroy();
 	hscp::PrintAST(ast);
 	freopen("Data\\data_target_code.txt", "w", stdout);
-	genIR::genIR(ast);
+	genIR::genIR(ast);//ç”Ÿæˆä¸­é—´ä»£ç 
 	printf("$\n");
 	freopen("con", "w", stdout);
-	printf("1.½ÓÏÂÀ´ÇëÔËĞĞtarget_code.exe\n");
+	printf("1.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½target_code.exe\n");
 	system("pause");
 	return 0;
 }

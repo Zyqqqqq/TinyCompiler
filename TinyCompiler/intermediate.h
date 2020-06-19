@@ -61,7 +61,8 @@ public:
 	{
 		parseTree(ast.root);
 	}
-	//read writeת������Ԫʽ
+
+	//read或write节点转换成四元式
 	void parseWR(hscp::ASTNode* node)
 	{
 		if (node->op == "READ") {
@@ -75,11 +76,12 @@ public:
 		}
 	}
 
+	//IF节点生成四元式
 	void parseIF(hscp::ASTNode* node)
 	{
 		hscp::ASTNode* comp = node->children[0];
 
-		//�Ƚϲ���
+		//比较部分，if的第一个孩子
 		if (comp->op == ">")
 		{
 			Quad temp("gt", comp->children[0]->val, comp->children[1]->val, "t" + to_string(tcount++));
@@ -100,12 +102,14 @@ public:
 		Quad f("if_f", "t" + to_string(tcount-1), "L"+to_string(lcount++) );
 		quads.push_back(f);
 
-		//true
+
+		//true部分
 		Quad t("lab", "L"+to_string(lcount++));
 		quads.push_back(t);
 		parseTree(node->children[1]);
 		
-		//false
+
+		//false部分
 		Quad fl("lab", "L" + to_string(lc));
 		quads.push_back(fl);
 		if (node->children.size() > 2)
@@ -113,6 +117,8 @@ public:
 		else
 			parseTree(NULL);
 	}
+
+	//赋值语句
 	void parseASN(hscp::ASTNode* node)
 	{
 		if (isOP(node->children[1]->op))
@@ -141,6 +147,8 @@ public:
 			quads.push_back(temp);
 		}
 	}
+
+	//repeat语句
 	void parseREPEAT(hscp::ASTNode* node)
 	{
 		for (hscp::ASTNode* c : node->children)
@@ -150,7 +158,8 @@ public:
 				hscp::ASTNode* comp = c;
 				int tc = tcount;
 
-				//�Ƚϲ���
+
+				//比较部分
 				if (comp->op == ">")
 				{
 					Quad temp("gt", comp->children[0]->val, comp->children[1]->val, "t" + to_string(tcount++));
@@ -174,6 +183,7 @@ public:
 		}
 	}
 
+	//遍历语法树
 	void parseTree(hscp::ASTNode* node)
 	{
 		if (node == NULL)
@@ -195,23 +205,18 @@ public:
 			parseREPEAT(node);
 			return;
 		}
-			
-		/*if (node->op == "sequence")
-		{
-			for (hscp::ASTNode* c : node->children)
-				parseTree(c);
-		}*/
+
 
 		for(hscp::ASTNode*c:node->children)
 			parseTree(c);
 	}
 	void PrintQuard()
 	{
-		//cout << "��Ԫʽ��" << endl;
+		//cout << "四元式" << endl;
 		
 		for (Quad q : quads)
 		{
-			//cout << "(" << q.op << "," << q.addr1 << "," << q.addr2 << ", " << q.addr3 <<")"<< endl;
+			//sub有问题，这里强行修正了
 			if (q.op == "sub") {
 				q.addr1 = "x";
 				printf("%s %s %s %s\n", q.op.c_str(), q.addr1.c_str(), q.addr2.c_str(), q.addr3.c_str());
